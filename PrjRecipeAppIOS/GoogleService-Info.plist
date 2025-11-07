@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.Alex.PrjRecipeAppIOS</string>
+	<string>com.team.PrjRecipeAppIOS</string>
 	<key>PROJECT_ID</key>
 	<string>prjrecipeappiosdb</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:307583797433:ios:a70f8e49835773e9fbb368</string>
+	<string>1:307583797433:ios:041ba4323abecb5cfbb368</string>
 </dict>
 </plist>
