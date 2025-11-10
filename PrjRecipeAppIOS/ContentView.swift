@@ -8,31 +8,41 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var auth = AuthService.shared //singleton pattern
+    @StateObject private var auth = AuthService.shared   // ObservableObject singleton
     @State private var isLoaded = false
-    
-    //@EnvironmentObject var authManager : AuthManager
-    
+
     var body: some View {
-        NavigationView{
+        NavigationStack {
             Group {
                 if !isLoaded {
                     ProgressView()
-                        .onAppear(){
-                            auth.fetchCurrentAppUser { _ in
-                                isLoaded = true
-                            }
+                        .task {
+                            // Fetch once when view appears
+                            await fetchUser()
                         }
-                }else if auth.currentUser == nil {
-                    LoginView() //switcher
-                }else{ //if there is a user currently loged in show thier profile
+                } else if auth.currentUser == nil {
+                    LoginView()
+                        .transition(.opacity.combined(with: .scale))
+                } else {
                     HomeView()
+                        .navigationTitle("Home")
+                        .transition(.opacity.combined(with: .scale))
                 }
+            }
+            .animation(.easeInOut(duration: 0.2), value: isLoaded)
+            .animation(.easeInOut(duration: 0.2), value: auth.currentUser == nil)
+        }
+    }
+
+    @MainActor
+    private func fetchUser() async {
+        await withCheckedContinuation { cont in
+            auth.fetchCurrentAppUser { _ in
+                isLoaded = true
+                cont.resume()
             }
         }
     }
 }
 
-#Preview {
-    ContentView()
-}
+#Preview { ContentView() }
