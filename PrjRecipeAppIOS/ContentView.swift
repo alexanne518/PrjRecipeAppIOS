@@ -12,7 +12,7 @@ struct ContentView: View {
     @State private var isLoaded = false
 
     var body: some View {
-        NavigationStack {
+        NavigationView { 
             Group {
                 if !isLoaded {
                     ProgressView()
@@ -24,7 +24,8 @@ struct ContentView: View {
                     LoginView()
                         .transition(.opacity.combined(with: .scale))
                 } else {
-                    HomeView()
+//                    HomeView()
+                    NavView()
                         .navigationTitle("Home")
                         .transition(.opacity.combined(with: .scale))
                 }
