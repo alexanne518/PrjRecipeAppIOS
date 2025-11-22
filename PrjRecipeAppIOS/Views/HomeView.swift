@@ -27,9 +27,7 @@ struct HomeView: View {
                     }
 
                     NavigationLink {
-                        //  create recipe view
-                        Text("Create Recipe (placeholder)")
-                            .navigationTitle("Create")
+                        PostCreationView()
                     } label: {
                         HomeTile(icon: "plus.circle", title: "Create")
                     }
@@ -52,8 +50,12 @@ struct HomeView: View {
                         HStack(spacing: 12) {
                             ForEach(HomeSampleData.featured) { r in
                                 NavigationLink {
-                                    // replace with recipe detail view
-                                    Text("Detail for \(r.title)")
+                                    RecipeDetailView(
+                                        title: r.title,
+                                        timeMinutes: r.timeMinutes,
+                                        servings: r.servings,
+                                        category: r.category
+                                    )
                                 } label: {
                                     FeaturedCard(
                                         title: r.title,
@@ -74,8 +76,12 @@ struct HomeView: View {
                     LazyVStack(spacing: 8) {
                         ForEach(HomeSampleData.recent) { r in
                             NavigationLink {
-                                // replace recipe review detail
-                                Text("Detail for \(r.title)")
+                                RecipeDetailView(
+                                    title: r.title,
+                                    timeMinutes: r.timeMinutes,
+                                    servings: r.servings,
+                                    category: r.category
+                                )
                             } label: {
                                 RecipeRow(
                                     title: r.title,
@@ -177,7 +183,7 @@ private struct RItem: Identifiable {
 
 private enum HomeSampleData {
     static let featured: [RItem] = [
-        .init(title: "Spaghetti Bolognese", timeMinutes: 30, servings: 3, category: "Dinner"),
+        .init(title: "Spaghetti Bolognese", timeMinutes: 30, servings: 3, category: "Lunch"),
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast")
     ]
 
