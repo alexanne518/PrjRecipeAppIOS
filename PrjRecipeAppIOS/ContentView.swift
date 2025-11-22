@@ -26,7 +26,6 @@ struct ContentView: View {
                 } else {
 //                    HomeView()
                     NavView()
-                        .navigationTitle("Home")
                         .transition(.opacity.combined(with: .scale))
                 }
             }

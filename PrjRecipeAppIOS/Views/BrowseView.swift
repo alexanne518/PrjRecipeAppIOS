@@ -11,23 +11,40 @@ private struct FeaturedCard: View {
     let title: String
     let subtitle: String
     var body: some View {
-        VStack(alignment: .leading) {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.secondary.opacity(0.12))
-                .frame(width: 170, height: 120)
-                .overlay(
-                    Image(systemName: "fork.knife.circle.fill")
-                        .font(.largeTitle)
-                        .foregroundStyle(.orange.opacity(0.8))
-                )
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.secondary.opacity(0.12))
+                    .frame(width: 170, height: 120)
+                
+                
+                Image(systemName: "fork.knife.circle.fill")
+                    .font(.system(size: 42))
+                    .foregroundStyle(.green)
+            }
+            
+            
             Text(title)
-                .font(.subheadline).bold()
+                .font(.subheadline)
+                .fontWeight(.semibold)
                 .lineLimit(2)
+                .foregroundColor(.primary)
+                .padding(.top, 4)
+            
+            
             Text(subtitle)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundColor(.secondary)
+                .padding(6)
+                .background(Color.orange.opacity(0.2))
+                .cornerRadius(8)
         }
-        .frame(width: 190)
+        .frame(width: 170)
+        .padding(8)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
     }
 }
 
@@ -51,25 +68,75 @@ private enum HomeSampleData {
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast")
-
     ]
-
 }
 
-
 struct BrowseView: View {
+    
+    @State var search: String = ""
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 20){
+        VStack(alignment: .center, spacing: 20){
+            
+            HStack{
+                
+                Image(systemName: "person.crop.circle.fill")
+                    .font(.title)
+                    .foregroundColor(.orange)
+                    .background(Circle().fill(Color.white).shadow(color: .orange.opacity(0.3), radius: 2))
+                
+                Spacer()
+                
+                
+                RoundedRectangle(cornerRadius: 20)
+                    .frame(width: 340, height: 50)
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [.orange.opacity(0.5), .yellow.opacity(0.3)],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .overlay {
+                        HStack{
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.orange)
+                                .font(.system(size: 18))
+                            
+                            TextField("Search recipes...", text: $search)
+                                .font(.body)
+                                .foregroundColor(.primary)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color.orange.opacity(0.4), lineWidth: 2)
+                    )
+                
+                Spacer()
+            }
             
             
-            Image(systemName: "person.crop.circle")
-                .font(.title)
+            HStack{
+                Text("Browse All types of recipes")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.black).opacity(0.7)
+                    .padding(.leading, 4)
+                Spacer()
+            }
             
-            Text("Browse All types of recipes")
             
             RoundedRectangle(cornerRadius: 180)
-                .frame(width: .infinity, height: 5)
-                .foregroundStyle(.gray).opacity(0.6)
+                .frame(height: 4)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [.orange.opacity(0.6), .pink.opacity(0.4)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
             
             ScrollView(.vertical, showsIndicators: false) {
                 
@@ -78,7 +145,7 @@ struct BrowseView: View {
                         GridItem(.flexible()),
                         GridItem(.flexible())
                     ],
-                    spacing: 12
+                    spacing: 20
                 ) {
                     ForEach(HomeSampleData.featured) { r in
                         NavigationLink {
@@ -89,15 +156,22 @@ struct BrowseView: View {
                                 title: r.title,
                                 subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
                             )
-                            
                         }
                         .buttonStyle(.plain)
                     }
                 }
             }
             
-        }.padding()
-        
+        }
+        .padding()
+        .background(
+            LinearGradient(
+                colors: [.white, .pink.opacity(0.3)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+        )
     }
 }
 

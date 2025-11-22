@@ -7,28 +7,45 @@
 
 import SwiftUI
 
-
 private struct FeaturedCard: View {
     let title: String
     let subtitle: String
     var body: some View {
-        VStack(alignment: .leading) {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.secondary.opacity(0.12))
-                .frame(width: 170, height: 120)
-                .overlay(
-                    Image(systemName: "fork.knife.circle.fill")
-                        .font(.largeTitle)
-                        .foregroundStyle(.orange.opacity(0.8))
-                )
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.secondary.opacity(0.12))
+                    .frame(width: .infinity, height: 120)
+                
+                
+                Image(systemName: "fork.knife.circle.fill")
+                    .font(.system(size: 42))
+                    .foregroundStyle(.green)
+                    .shadow(color: .orange.opacity(0.3), radius: 4, x: 0, y: 2)
+            }
+            
+            
             Text(title)
-                .font(.subheadline).bold()
+                .font(.subheadline)
+                .fontWeight(.semibold)
                 .lineLimit(2)
+                .foregroundColor(.primary)
+                .padding(.top, 4)
+            
+            
             Text(subtitle)
                 .font(.caption)
-                .foregroundStyle(.secondary)
+                .foregroundColor(.secondary)
+                .padding(6)
+                .background(Color.orange.opacity(0.2))
+                .cornerRadius(8)
         }
         .frame(width: 190)
+        .padding(8)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
     }
 }
 
@@ -47,7 +64,6 @@ private enum HomeSampleData {
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
         .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast")
-
     ]
     
     static let recent: [RItem] = [
@@ -55,131 +71,166 @@ private enum HomeSampleData {
         .init(title: "Brownies", timeMinutes: 40, servings: 8, category: "Dessert"),
         .init(title: "Omelette", timeMinutes: 12, servings: 1, category: "Breakfast")
     ]
-
-
 }
-
-
 
 struct ProfileView: View {
     
     @ObservedObject private var auth = AuthService.shared
-    @State private var errorText : String?
-
+    @State private var errorText: String?
 
     var body: some View {
-        VStack(alignment: .center){
+        VStack(alignment: .center) {
             
-            ScrollView(.vertical, showsIndicators: false){
+            ScrollView(.vertical, showsIndicators: false) {
                 
-                HStack(alignment: .center, spacing: 35){
-                    Image(systemName: "person.crop.circle")
+                // Profile Header
+                HStack(alignment: .center, spacing: 35) {
+                    
+                    Image(systemName: "person.crop.circle.fill")
                         .resizable()
-                        .frame(width: 70, height: 70)
-                        .padding(.horizontal)
-                    VStack{
-                        Text("Username")
-                            .bold(true)
+                        .frame(width: 80, height: 80)
+                        .foregroundStyle( //made it cute incase we dont jave enough time to change it to have diff options for the users
+                            LinearGradient(
+                                colors: [.orange, .pink],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                         
-                        Text("5 Posts") //get coiunt from db
+                    
+                    VStack(spacing: 8) {
+                        Text("Username")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(.primary)
+                        
+                        Text("5 Posts")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .padding(6)
+                            .background(Color.orange.opacity(0.2))
+                            .cornerRadius(8)
                     }
                     
                     
-                    RoundedRectangle(cornerRadius: 15)
+                    RoundedRectangle(cornerRadius: 20)
                         .frame(width: 100, height: 40)
-                        .overlay{
-                            
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.orange.opacity(0.3), .yellow.opacity(0.4)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.orange.opacity(0.6), lineWidth: 2)
+                        )
+                        .overlay {
                             Button(role: .destructive) {
                                 let result = auth.signOut()
-                                if case .failure(let failure) = result { //when we have the faliure the current user is set to null and will automatically go back to the login page
+                                if case .failure(let failure) = result {
                                     errorText = failure.localizedDescription
-                                }else {
+                                } else {
                                     errorText = nil
                                 }
                             } label: {
-                                Text("Sign Out").foregroundStyle(.white)
+                                Text("Sign Out")
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
                             }
                         }
-
-                }.padding(.all)
+                }
+                .padding(.all)
                 
-                VStack(alignment: .center){
-                    HStack{
+                // Dashboard Section
+                VStack(alignment: .center) {
+                    HStack {
                         Spacer()
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: 20)
                             .frame(width: 370, height: 60)
-                            .foregroundStyle(.orange).opacity(0.8)
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.orange.opacity(0.6), .pink.opacity(0.4)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
                             .overlay{
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.orange.opacity(0.7), lineWidth: 2)
+                            
                                 Text("Your dashboard")
-                                
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
                             }
-                        
                         Spacer()
                     }
-                    
-                }.padding(.horizontal)
+                }
+                .padding(.horizontal)
                 
-                
+                // the users secipes scroll
                 ScrollView(.horizontal, showsIndicators: false) {
-                    
                     LazyHGrid(
                         rows: [
                             GridItem(.flexible()),
                             GridItem(.flexible())
                         ],
-                        spacing: 12
+                        spacing: 20
                     ) {
                         ForEach(HomeSampleData.featured) { r in
                             NavigationLink {
-                                // replace with recipe detail view
+                                
                                 Text("Detail for \(r.title)")
                             } label: {
                                 FeaturedCard(
                                     title: r.title,
                                     subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
                                 )
-                                
                             }
                             .buttonStyle(.plain)
                         }
                     }
-                }.padding()
+                }
+                .padding()
+                
                 Spacer()
                 
-                VStack(alignment: .center){
-                    HStack{
+                // users favotires section
+                VStack(alignment: .center) {
+                    HStack {
                         Spacer()
-                        RoundedRectangle(cornerRadius: 10)
+                        RoundedRectangle(cornerRadius: 20)
                             .frame(width: 370, height: 60)
-                            .foregroundStyle(.yellow).opacity(0.5)
+                            .foregroundStyle(
+                                LinearGradient(
+                                    colors: [.yellow.opacity(0.5), .orange.opacity(0.3)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
                             .overlay{
-                                Text("Your Favories")
-                                
-                                
-//                                idk if yall wanna do a faorites page
-//                                Spacer()
-//                                
-//                                NavigationLink(destination: FavoritesView()){
-//                                    VStack{
-//                                        Image(systemName: "ellipsis.circle.fill")
-//                                            .foregroundStyle(.white)
-//                                            .font(.title)
-//                                        
-//                                        Text("view all").foregroundStyle(.white)
-//                                    }
-//                                }.buttonStyle(.plain)
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(Color.orange.opacity(0.7), lineWidth: 2)
+                            
+                                Text("Your Favorites")
+                                    .font(.headline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.pink).opacity(0.5)
                             }
-                        
                         Spacer()
                     }
-                    
-                }.padding(.horizontal)
+                }
+                .padding(.horizontal)
                 
+                // Favorites Scroll
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 12) {
+                    HStack(spacing: 20) {
                         ForEach(HomeSampleData.recent) { r in
                             NavigationLink {
-                                // replace with recipe detail view
+                                
                                 Text("Detail for \(r.title)")
                             } label: {
                                 FeaturedCard(
@@ -191,18 +242,21 @@ struct ProfileView: View {
                         }
                     }
                     .padding(.vertical, 4)
-                }.padding()
-
+                }
+                .padding()
             }
-            
-        }.padding(.all)
-        
+        }
+        .padding(.all)
+        .background(
+            LinearGradient(
+                colors: [.orange.opacity(0.1), .pink.opacity(0.05)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+        )
     }
-    
 }
-        
-    
-
 
 #Preview {
     ProfileView()
