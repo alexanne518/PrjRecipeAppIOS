@@ -15,6 +15,7 @@ class AuthService: ObservableObject {
     
     static let shared = AuthService()
     
+    
     @Published var currentUser: AppUser? //we created our own user, if we used just User? in model and here then it would be confused if we used firebaseAuth.user or the user model that we created, since the name would be clashing, thats why its called app user
     private let db = Firestore.firestore()
     
