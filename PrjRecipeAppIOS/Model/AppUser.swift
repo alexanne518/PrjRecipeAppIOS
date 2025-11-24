@@ -12,4 +12,5 @@ struct AppUser: Identifiable, Codable{
     @DocumentID var id : String? //optional, firebase will set this uuid for us, the id has to be written like "id" or else it will crash
     let email: String //change cant it after
     var userName: String
+    var favorites: [String]? = []
 }
