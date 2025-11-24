@@ -7,104 +7,35 @@
 
 import SwiftUI
 
-private struct FeaturedCard: View {
-    let title: String
-    let subtitle: String
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ZStack {
-                
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color.secondary.opacity(0.12))
-                    .frame(width: .infinity, height: 120)
-                
-                
-                Image(systemName: "fork.knife.circle.fill")
-                    .font(.system(size: 42))
-                    .foregroundStyle(.green)
-                    .shadow(color: .orange.opacity(0.3), radius: 4, x: 0, y: 2)
-            }
-            
-            
-            Text(title)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .lineLimit(2)
-                .foregroundColor(.primary)
-                .padding(.top, 4)
-            
-            
-            Text(subtitle)
-                .font(.caption)
-                .foregroundColor(.secondary)
-                .padding(6)
-                .background(Color.orange.opacity(0.2))
-                .cornerRadius(8)
-        }
-        .frame(width: 190)
-        .padding(8)
-        .background(Color.white)
-        .cornerRadius(20)
-        .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
-    }
-}
-
-private struct RItem: Identifiable {
-    let id = UUID()
-    let title: String
-    let timeMinutes: Int
-    let servings: Int
-    let category: String //this needs to be an enum
-}
-
-private enum HomeSampleData {
-    static let featured: [RItem] = [
-        .init(title: "Spaghetti Bolognese", timeMinutes: 30, servings: 3, category: "Dinner"),
-        .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
-        .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
-        .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast"),
-        .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast")
-    ]
-    
-    static let recent: [RItem] = [
-        .init(title: "Soup Dumplings", timeMinutes: 30, servings: 2, category: "Lunch"),
-        .init(title: "Brownies", timeMinutes: 40, servings: 8, category: "Dessert"),
-        .init(title: "Omelette", timeMinutes: 12, servings: 1, category: "Breakfast")
-    ]
-}
-
 struct ProfileView: View {
-    
     @ObservedObject private var auth = AuthService.shared
     @State private var errorText: String?
-
+    @State private var myRecipes: [Recipe] = [] //stores the real recipes
+    @State private var favoriteRecipes: [Recipe] = []
+    
     var body: some View {
         VStack(alignment: .center) {
             
             ScrollView(.vertical, showsIndicators: false) {
-                
-                // Profile Header
                 HStack(alignment: .center, spacing: 35) {
-                    
                     Image(systemName: "person.crop.circle.fill")
                         .resizable()
                         .frame(width: 80, height: 80)
-                        .foregroundStyle( //made it cute incase we dont jave enough time to change it to have diff options for the users
+                        .foregroundStyle(
                             LinearGradient(
                                 colors: [.orange, .pink],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
-                        
                     
                     VStack(spacing: 8) {
-                        Text("Username")
+                        Text(auth.currentUser?.userName ?? "Username")
                             .font(.title3)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
                         
-                        Text("5 Posts")
+                        Text("\(myRecipes.count) Posts")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                             .padding(6)
@@ -112,7 +43,7 @@ struct ProfileView: View {
                             .cornerRadius(8)
                     }
                     
-                    
+                    //Sign Out Button
                     RoundedRectangle(cornerRadius: 20)
                         .frame(width: 100, height: 40)
                         .foregroundStyle(
@@ -144,7 +75,6 @@ struct ProfileView: View {
                 }
                 .padding(.all)
                 
-                // Dashboard Section
                 VStack(alignment: .center) {
                     HStack {
                         Spacer()
@@ -160,8 +90,8 @@ struct ProfileView: View {
                             .overlay{
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.orange.opacity(0.7), lineWidth: 2)
-                            
-                                Text("Your dashboard")
+                                
+                                Text("My Recipes")
                                     .font(.headline)
                                     .fontWeight(.semibold)
                                     .foregroundColor(.white)
@@ -171,34 +101,39 @@ struct ProfileView: View {
                 }
                 .padding(.horizontal)
                 
-                // the users secipes scroll
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHGrid(
-                        rows: [
-                            GridItem(.flexible()),
-                            GridItem(.flexible())
-                        ],
-                        spacing: 20
-                    ) {
-                        ForEach(HomeSampleData.featured) { r in
-                            NavigationLink {
-                                
-                                Text("Detail for \(r.title)")
-                            } label: {
-                                FeaturedCard(
-                                    title: r.title,
-                                    subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
-                                )
+                if myRecipes.isEmpty {
+                    Text("You haven't posted any recipes yet.")
+                        .padding()
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHGrid(rows: [GridItem(.flexible())], spacing: 20) {
+                            ForEach(myRecipes) { r in
+                                NavigationLink {
+                                    RecipeDetailView(recipe: r)
+                                } label: {
+                                    FeaturedCard(
+                                        title: r.title,
+                                        subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        deleteRecipe(r)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
                             }
-                            .buttonStyle(.plain)
                         }
+                        .padding()
                     }
                 }
-                .padding()
                 
                 Spacer()
                 
-                // users favotires section
                 VStack(alignment: .center) {
                     HStack {
                         Spacer()
@@ -214,7 +149,7 @@ struct ProfileView: View {
                             .overlay{
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(Color.orange.opacity(0.7), lineWidth: 2)
-                            
+                                
                                 Text("Your Favorites")
                                     .font(.headline)
                                     .fontWeight(.semibold)
@@ -225,25 +160,30 @@ struct ProfileView: View {
                 }
                 .padding(.horizontal)
                 
-                // Favorites Scroll
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 20) {
-                        ForEach(HomeSampleData.recent) { r in
-                            NavigationLink {
-                                
-                                Text("Detail for \(r.title)")
-                            } label: {
-                                FeaturedCard(
-                                    title: r.title,
-                                    subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
-                                )
+                if favoriteRecipes.isEmpty {
+                    Text("No favorites yet. Go explore!")
+                        .padding()
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHGrid(rows: [GridItem(.flexible())], spacing: 20) {
+                            ForEach(favoriteRecipes) { r in
+                                NavigationLink {
+                                    RecipeDetailView(recipe: r)
+                                } label: {
+                                    FeaturedCard(
+                                        title: r.title,
+                                        subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
+                                    )
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
                         }
+                        .padding()
                     }
-                    .padding(.vertical, 4)
                 }
-                .padding()
+                
             }
         }
         .padding(.all)
@@ -255,6 +195,88 @@ struct ProfileView: View {
             )
             .ignoresSafeArea()
         )
+        .onAppear {
+            loadMyRecipes()
+            loadFavorites()
+        }
+    }
+    
+    func loadMyRecipes() {
+        guard let userId = auth.currentUser?.id else { return }
+        
+        RecipeService.shared.fetchRecipes(for: userId) { recipes in
+            DispatchQueue.main.async {
+                self.myRecipes = recipes
+            }
+        }
+    }
+    
+    func deleteRecipe(_ recipe: Recipe) {
+        guard let id = recipe.id else { return }
+        
+        RecipeService.shared.deleteRecipe(recipeId: id) { error in
+            if let error = error {
+                print("Error deleting recipe: \(error.localizedDescription)")
+            } else {
+                DispatchQueue.main.async {
+                    self.myRecipes.removeAll { $0.id == id }
+                    self.loadFavorites()
+                }
+            }
+        }
+    }
+    
+    func loadFavorites() {
+        guard let userFavorites = auth.currentUser?.favorites else { return }
+
+        RecipeService.shared.fetchRecipes { allRecipes in
+            DispatchQueue.main.async {
+                self.favoriteRecipes = allRecipes.filter { recipe in
+                    if let id = recipe.id {
+                        return userFavorites.contains(id)
+                    }
+                    return false
+                }
+            }
+        }
+    }
+}
+
+private struct FeaturedCard: View {
+    let title: String
+    let subtitle: String
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.secondary.opacity(0.12))
+                    .frame(width: 160, height: 120)
+                
+                Image(systemName: "fork.knife.circle.fill")
+                    .font(.system(size: 42))
+                    .foregroundStyle(.green)
+                    .shadow(color: .orange.opacity(0.3), radius: 4, x: 0, y: 2)
+            }
+            
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .lineLimit(2)
+                .foregroundColor(.primary)
+                .padding(.top, 4)
+            
+            Text(subtitle)
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(6)
+                .background(Color.orange.opacity(0.2))
+                .cornerRadius(8)
+        }
+        .frame(width: 160)
+        .padding(8)
+        .background(Color.white)
+        .cornerRadius(20)
+        .shadow(color: .gray.opacity(0.2), radius: 8, x: 0, y: 4)
     }
 }
 

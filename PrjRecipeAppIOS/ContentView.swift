@@ -8,23 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var auth = AuthService.shared   // ObservableObject singleton
+    @StateObject private var auth = AuthService.shared
     @State private var isLoaded = false
-
+    
     var body: some View {
-        NavigationView { 
+        NavigationView {
             Group {
                 if !isLoaded {
-                    ProgressView()
-                        .task {
-                            // Fetch once when view appears
-                            await fetchUser()
-                        }
+                    ProgressView().task { await fetchUser() }
                 } else if auth.currentUser == nil {
-                    LoginView()
-                        .transition(.opacity.combined(with: .scale))
+                    NavigationView {
+                        LoginView()
+                    }
+                    .transition(.opacity.combined(with: .scale))
                 } else {
-//                    HomeView()
                     NavView()
                         .transition(.opacity.combined(with: .scale))
                 }
@@ -33,7 +30,7 @@ struct ContentView: View {
             .animation(.easeInOut(duration: 0.2), value: auth.currentUser == nil)
         }
     }
-
+    
     @MainActor
     private func fetchUser() async {
         await withCheckedContinuation { cont in

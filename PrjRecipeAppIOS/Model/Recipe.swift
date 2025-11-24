@@ -2,17 +2,19 @@
 //  Recipe.swift
 //  PrjRecipeAppIOS
 //
-//  Created by netblen on 23-11-2025.
+//  Created by Macbook on 2025-11-02.
 //
 
-import SwiftUI
+import Foundation
+import FirebaseFirestore
 
-struct Recipe: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    Recipe()
+struct Recipe: Identifiable, Codable {
+    @DocumentID var id: String? // Firebase gives this a unique ID
+    var title: String
+    var timeMinutes: Int
+    var servings: Int
+    var category: String
+    var userId: String // To know who posted it
+    var ingredients: [String]?
+    var instructions: [String]?
 }

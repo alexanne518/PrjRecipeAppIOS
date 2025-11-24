@@ -14,9 +14,9 @@ struct NavView: View {
                 .tabItem{
                     Image(systemName: "house.fill")
                     Text("Home")
-                }.toolbarBackground(.visible, for: .tabBar)
-                .toolbarBackground(Color.green.opacity(0.8), for: .tabBar)
-
+                }
+                .toolbarBackground(.visible, for: .tabBar)
+                //.toolbarBackground(Color.orange.opacity(0.8), for: .tabBar)
             
             BrowseView()
                 .tabItem{
@@ -35,10 +35,8 @@ struct NavView: View {
                     Image(systemName: "person.crop.circle")
                     Text("Profile")
                 }
-            
         }
         .tint(.orange)
-
     }
 }
 

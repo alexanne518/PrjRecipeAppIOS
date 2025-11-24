@@ -8,87 +8,104 @@
 import SwiftUI
 
 struct HomeView: View {
+    //saves the real recipes created by the user
+    @State private var allRecipes: [Recipe] = []
+    
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Welcome to Recify")
-                        .font(.largeTitle).bold()
-                    Text("Discover, cook, and share your favourite recipes.")
-                        .foregroundStyle(.secondary)
-                }
-                HStack(spacing: 12) {
-                    NavigationLink {
-                        // replace w recipe list view
-                        Text("All Recipes (placeholder)")
-                            .navigationTitle("Recipes")
-                    } label: {
-                        HomeTile(icon: "book.pages", title: "Browse")
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Welcome to Recify")
+                            .font(.largeTitle).bold()
+                        Text("Discover, cook, and share your favourite recipes.")
+                            .foregroundStyle(.secondary)
                     }
-
-                    NavigationLink {
-                        //  create recipe view
-                        Text("Create Recipe (placeholder)")
-                            .navigationTitle("Create")
-                    } label: {
-                        HomeTile(icon: "plus.circle", title: "Create")
+                    
+                    HStack(spacing: 12) {
+                        NavigationLink {
+                            BrowseView()
+                        } label: {
+                            HomeTile(icon: "book.pages", title: "Browse")
+                        }
+                        
+                        NavigationLink {
+                            PostCreationView()
+                        } label: {
+                            HomeTile(icon: "plus.circle", title: "Create")
+                        }
+                        
+                        NavigationLink {
+                            FavoritesView()
+                        } label: {
+                            HomeTile(icon: "heart", title: "Favorites")
+                        }
                     }
-
-                    NavigationLink {
-                        // replace w favourites view
-                        Text("Favorites (placeholder)")
-                            .navigationTitle("Favorites")
-                    } label: {
-                        HomeTile(icon: "heart", title: "Favorites")
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Featured")
+                            .font(.headline)
+                        
+                        if allRecipes.isEmpty {
+                            Text("Loading recipes...")
+                                .foregroundStyle(.secondary)
+                                .padding()
+                        } else {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 12) {
+                                    //shows the first 5 featured
+                                    ForEach(allRecipes.prefix(5)) { r in
+                                        NavigationLink {
+                                            RecipeDetailView(recipe: r)
+                                        } label: {
+                                            FeaturedCard(
+                                                title: r.title,
+                                                subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
+                                            )
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
                     }
-                }
-
-                // featured
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Featured")
-                        .font(.headline)
-
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(HomeSampleData.featured) { r in
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Recent")
+                            .font(.headline)
+                        
+                        LazyVStack(spacing: 8) {
+                            //shows all the recipes
+                            ForEach(allRecipes) { r in
                                 NavigationLink {
-                                    // replace with recipe detail view
-                                    Text("Detail for \(r.title)")
+                                    RecipeDetailView(recipe: r)
                                 } label: {
-                                    FeaturedCard(
+                                    RecipeRow(
                                         title: r.title,
-                                        subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
+                                        meta: "\(r.timeMinutes) min • \(r.servings) servings",
+                                        tag: r.category
                                     )
                                 }
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.vertical, 4)
                     }
                 }
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Recent")
-                        .font(.headline)
-
-                    LazyVStack(spacing: 8) {
-                        ForEach(HomeSampleData.recent) { r in
-                            NavigationLink {
-                                // replace recipe review detail
-                                Text("Detail for \(r.title)")
-                            } label: {
-                                RecipeRow(
-                                    title: r.title,
-                                    meta: "\(r.timeMinutes) min • \(r.servings) servings",
-                                    tag: r.category
-                                )
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                }
+                .padding()
             }
-            .padding()
+            .onAppear {
+                loadData()
+            }
+        }
+    }
+    
+    func loadData() {
+        RecipeService.shared.fetchRecipes { fetchedRecipes in
+            DispatchQueue.main.async {
+                self.allRecipes = fetchedRecipes
+            }
         }
     }
 }
@@ -146,7 +163,7 @@ private struct RecipeRow: View {
                 .fill(Color.secondary.opacity(0.12))
                 .frame(width: 64, height: 64)
                 .overlay(Image(systemName: "photo").foregroundStyle(.secondary))
-
+            
             VStack(alignment: .leading, spacing: 4) {
                 Text(title).font(.headline).lineLimit(1)
                 Text(meta).font(.caption).foregroundStyle(.secondary).lineLimit(1)
@@ -167,27 +184,6 @@ private struct RecipeRow: View {
     }
 }
 
-private struct RItem: Identifiable {
-    let id = UUID()
-    let title: String
-    let timeMinutes: Int
-    let servings: Int
-    let category: String
-}
-
-private enum HomeSampleData {
-    static let featured: [RItem] = [
-        .init(title: "Spaghetti Bolognese", timeMinutes: 30, servings: 3, category: "Dinner"),
-        .init(title: "Avocado Toast", timeMinutes: 10, servings: 1, category: "Breakfast")
-    ]
-
-    static let recent: [RItem] = [
-        .init(title: "Soup Dumplings", timeMinutes: 30, servings: 2, category: "Lunch"),
-        .init(title: "Brownies", timeMinutes: 40, servings: 8, category: "Dessert"),
-        .init(title: "Omelette", timeMinutes: 12, servings: 1, category: "Breakfast")
-    ]
-}
-
 #Preview {
-    NavigationStack { HomeView() }
+    HomeView()
 }
