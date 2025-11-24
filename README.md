@@ -2,11 +2,11 @@
 
 ## A cook book app built using swift.ui, for users to post and view recipes to find and give others insperation when making food. 
 
-This project was built for an ios group term project to show our skills and knowledge using xcode and swift. in the app users can:
+This project was built for an ios group term project to show our skills and knowledge using xcode and swift. In this app the user can:
 
-* Create an account
-* Browse and search for recipes that are already posted
-* create and post thier own recipes
+* Create an account.
+* Browse and search for recipes that are already posted.
+* Create and post their own recipes
 * View thier published and favorited recipes on the profile page
 
 ## Take a look
@@ -18,4 +18,4 @@ This project was built for an ios group term project to show our skills and know
 
 
 ## Known issues 
-Will update so that users can uplaod images for their recipes and thier profile
+Will update so that users can uplaod images for their recipes and their profile.
