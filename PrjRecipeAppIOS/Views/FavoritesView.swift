@@ -12,7 +12,7 @@ struct FavoritesView: View {
     @State private var favoriteRecipes: [Recipe] = []
     
     var body: some View {
-        NavigationView {
+//        NavigationView { //was duplicating it
             ScrollView {
                 if favoriteRecipes.isEmpty {
                     VStack(spacing: 20) {
@@ -43,14 +43,16 @@ struct FavoritesView: View {
             .onAppear {
                 loadFavorites()
             }
-        }
+//        }
     }
     
+    
     func loadFavorites() {
-        //1. Get the user list of favorite
+        
+        //geting all the users favorises
         guard let userFavorites = auth.currentUser?.favorites else { return }
         
-        //2. Fetch ALL recipes, but only keep the ones that are in the list
+        //g3etting recipes 
         RecipeService.shared.fetchRecipes { allRecipes in
             DispatchQueue.main.async {
                 self.favoriteRecipes = allRecipes.filter { recipe in

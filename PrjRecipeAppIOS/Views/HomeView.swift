@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    //saves the real recipes created by the user
+    //savs recipes created by the user
     @State private var allRecipes: [Recipe] = []
     
     var body: some View {

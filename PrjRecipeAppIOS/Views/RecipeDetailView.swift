@@ -134,14 +134,14 @@ struct RecipeDetailView: View {
             }
         }
         .ignoresSafeArea(edges: .top)
-        //3. Add Alert and Delete Functionality
+        
         .alert("Delete Recipe?", isPresented: $showDeleteAlert) {
             Button("Delete", role: .destructive) {
                 deleteRecipe()
             }
             Button("Cancel", role: .cancel) { }
         } message: {
-            Text("Are you sure you want to delete this recipe? This action cannot be undone.")
+            Text("Are you sure you want to delete this recipe?")
         }
     }
     

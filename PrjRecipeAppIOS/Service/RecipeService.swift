@@ -14,7 +14,7 @@ class RecipeService: ObservableObject {
     
     private let db = Firestore.firestore()
     
-    //1. Function to ADD a recipe (Create)
+    
     func addRecipe(recipe: Recipe, completion: @escaping (Error?) -> Void) {
         do {
             try db.collection("recipes").addDocument(from: recipe) { error in
@@ -25,7 +25,7 @@ class RecipeService: ObservableObject {
         }
     }
     
-    //2. Function to fetch SPECIFIC USER recipes
+   
     func fetchRecipes(for userId: String, completion: @escaping ([Recipe]) -> Void) {
         db.collection("recipes")
             .whereField("userId", isEqualTo: userId)
@@ -45,7 +45,7 @@ class RecipeService: ObservableObject {
             }
     }
     
-    //3. Function to fetch ALL recipes
+    
     func fetchRecipes(completion: @escaping ([Recipe]) -> Void) {
         db.collection("recipes").getDocuments { snapshot, error in
             guard let documents = snapshot?.documents, error == nil else {
@@ -60,7 +60,7 @@ class RecipeService: ObservableObject {
         }
     }
     
-    //4. Function to DELETE a recipe
+    
     func deleteRecipe(recipeId: String, completion: @escaping (Error?) -> Void) {
         db.collection("recipes").document(recipeId).delete { error in
             completion(error)

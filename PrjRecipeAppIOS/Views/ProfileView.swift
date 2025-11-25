@@ -10,7 +10,7 @@ import SwiftUI
 struct ProfileView: View {
     @ObservedObject private var auth = AuthService.shared
     @State private var errorText: String?
-    @State private var myRecipes: [Recipe] = [] //stores the real recipes
+    @State private var myRecipes: [Recipe] = [] //stores the real recepes
     @State private var favoriteRecipes: [Recipe] = []
     
     var body: some View {
@@ -43,7 +43,7 @@ struct ProfileView: View {
                             .cornerRadius(8)
                     }
                     
-                    //Sign Out Button
+                    //sign out button
                     RoundedRectangle(cornerRadius: 20)
                         .frame(width: 100, height: 40)
                         .foregroundStyle(
@@ -102,7 +102,7 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 
                 if myRecipes.isEmpty {
-                    Text("You haven't posted any recipes yet.")
+                    Text("You haven't posted any recipes yet")
                         .padding()
                         .foregroundStyle(.secondary)
                         .font(.caption)
@@ -161,7 +161,7 @@ struct ProfileView: View {
                 .padding(.horizontal)
                 
                 if favoriteRecipes.isEmpty {
-                    Text("No favorites yet. Go explore!")
+                    Text("No favorites yet. go explore our recipes")
                         .padding()
                         .foregroundStyle(.secondary)
                         .font(.caption)
@@ -174,7 +174,7 @@ struct ProfileView: View {
                                 } label: {
                                     FeaturedCard(
                                         title: r.title,
-                                        subtitle: "\(r.timeMinutes) min • \(r.servings) servings"
+                                        subtitle: "\(r.timeMinutes) min - \(r.servings) servings"
                                     )
                                 }
                                 .buttonStyle(.plain)

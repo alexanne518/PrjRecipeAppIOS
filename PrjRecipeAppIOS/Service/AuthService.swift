@@ -9,7 +9,7 @@ class AuthService: ObservableObject {
     @Published var currentUser: AppUser?
     private let db = Firestore.firestore()
     
-    //signup
+    
     func signUp(email: String, password :String, userName: String, completion: @escaping (Result <AppUser, Error>) -> Void){
         Auth.auth().createUser(withEmail: email, password: password){ result, error in
             if let error = error {
@@ -34,6 +34,9 @@ class AuthService: ObservableObject {
             }
         }
     }
+    
+    
+    
     func login (email : String, password: String , completion: @escaping (Result <AppUser, Error>) -> Void){
         Auth.auth().signIn(withEmail: email, password: password){ result, error in
             if let error = error{
@@ -99,7 +102,7 @@ class AuthService: ObservableObject {
         }
     }
     
-    //update user details
+    //update user details, dont use but just in case
     func updateProfile(userName: String, completion: @escaping (Result <Void, Error>) -> Void){
         guard let uid = Auth.auth().currentUser?.uid else{
             return completion(.success(()))
@@ -128,6 +131,8 @@ class AuthService: ObservableObject {
             return .failure(error)
         }
     }
+    
+    
     
     func toggleFavorite(recipeId: String) {
         guard var user = currentUser, let userId = user.id else { return }

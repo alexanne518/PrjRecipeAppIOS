@@ -92,8 +92,18 @@ struct SignUpView: View {
                         self.errorMessage = "Passwords do not match"
                         return
                     }
+                    
                     isLoading = true
                     errorMessage = nil
+                    
+                    /*
+                    auth.signUp(email: email, password: password, userName: userName){ result in
+                        switch result {
+                        case .success(_): self.errorMessage = nil
+                        case .failure(let failure): self.errorMessage = failure.localizedDescription
+                        }
+
+                    }*/
                     
                     auth.signUp(email: email, password: password, userName: userName){ result in
                         
@@ -104,7 +114,7 @@ struct SignUpView: View {
                             case .success(let user):
                                 self.errorMessage = nil
                                 self.tempUser = user
-                                self.showAlert = true
+                                self.showAlert = true //show alter after sign up is succesfull
                             case .failure(let failure):
                                 //If firebase fails show that error
                                 self.errorMessage = failure.localizedDescription
@@ -133,7 +143,7 @@ struct SignUpView: View {
                 Spacer()
                 
                 Button(action: {
-                    dismiss() //Go back to Login
+                    dismiss() // This gonna go back to login view
                 }) {
                     HStack {
                         Text("Already have an account?")
@@ -149,13 +159,13 @@ struct SignUpView: View {
         //The alert dismisses the view to let them log in
         .alert("Sign Up Successful", isPresented: $showAlert) {
             Button("OK") {
-                //redirect to Homepage when clicked
+                //redirect to homepage when clicked
                 if let user = tempUser {
                     auth.currentUser = user
                 }
             }
         } message: {
-            Text("Your account has been created. Click OK to proceed to the home page.")
+            Text("Your account has been created, click ok to go to our home page")
         }
     }
 }

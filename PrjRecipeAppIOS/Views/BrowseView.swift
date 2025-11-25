@@ -11,7 +11,7 @@ struct BrowseView: View {
     @State private var allRecipes: [Recipe] = []
     @State private var searchText = ""
     
-    // Helper to calculate which recipes to show
+    // helper to clacuakte which recipes to show
     var filteredRecipes: [Recipe] {
         if searchText.isEmpty {
             return allRecipes

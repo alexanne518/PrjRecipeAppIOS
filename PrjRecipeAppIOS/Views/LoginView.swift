@@ -36,7 +36,7 @@ struct LoginView: View {
                 }
                 .padding(.bottom, 20)
                 
-                // Error Message
+                
                 if let errorMessage = errorMessage {
                     Text(errorMessage)
                         .foregroundStyle(.red)
@@ -62,7 +62,7 @@ struct LoginView: View {
                 }
                 .padding(.horizontal, 20)
                 
-                // Login Button
+                // ogin button
                 Button(action: {
                     guard Validators.checkEmail(email) else {
                         self.errorMessage = "Please enter a valid email address."
@@ -96,7 +96,7 @@ struct LoginView: View {
                 
                 Spacer()
                 
-                // Sign Up Link
+                // link to signup
                 NavigationLink(destination: SignUpView()){
                     HStack {
                         Text("Don't have an account?")

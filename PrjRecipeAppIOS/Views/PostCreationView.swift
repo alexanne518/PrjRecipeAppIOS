@@ -22,7 +22,7 @@ struct PostCreationView: View {
     @State private var showValidationError = false
     @State private var validationErrors: [String] = []
 
-    /*
+    /* gonna do it another way
     private var isFormValidInput: Bool {
         if (!title.isEmpty && !timeMinutes.isEmpty && !servings.isEmpty && !ingredientsText.trimmingCharacters(in: .whitespaces).isEmpty && !instructionsText.trimmingCharacters(in: .whitespaces).isEmpty)
         {
@@ -39,7 +39,7 @@ struct PostCreationView: View {
             
             Form {
                 
-                // ADD THIS SECTION TO SHOW VALIDATION ERRORS
+                
                 if !validationErrors.isEmpty {
                     Section {
                         VStack(alignment: .leading, spacing: 8) {
@@ -115,7 +115,7 @@ struct PostCreationView: View {
                 .font(.headline)
             }
             .navigationTitle("New Recipe")
-            //success
+            
             .alert("Success!", isPresented: $showSuccessAlert) {
                 Button("OK") {
                     dismiss()
@@ -140,6 +140,7 @@ struct PostCreationView: View {
                 validationErrors.append("Recipe title is required")
             }
             
+        
             if timeMinutes.isEmpty {
                 validationErrors.append("Cooking time is required")
             } else if Int(timeMinutes) ?? 0 <= 0 {
@@ -151,12 +152,15 @@ struct PostCreationView: View {
             } else if Int(servings) ?? 0 <= 0 {
                 validationErrors.append("Servings must be greater than 0")
             }
+        
             
             let trimmedIngre = ingredientsText.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedIngre.isEmpty {
                 validationErrors.append("At least one ingredient is required")
             }
             
+        
+        
             let trimmedInst = instructionsText.trimmingCharacters(in: .whitespacesAndNewlines)
             if trimmedInst.isEmpty {
                 validationErrors.append("Instructions are required")
@@ -175,6 +179,8 @@ struct PostCreationView: View {
         let ingredientsArray = ingredientsText.components(separatedBy: "\n").filter { !$0.isEmpty }
         let instructionsArray = instructionsText.components(separatedBy: "\n").filter { !$0.isEmpty }
         
+        
+        
         let newRecipe = Recipe(
             title: title,
             timeMinutes: Int(timeMinutes) ?? 0,
@@ -192,7 +198,10 @@ struct PostCreationView: View {
                 showSuccessAlert = true
             }
         }
+        
     }
+    
+    
 }
 
 #Preview {
