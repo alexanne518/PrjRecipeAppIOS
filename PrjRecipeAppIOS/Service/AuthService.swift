@@ -27,16 +27,13 @@ class AuthService: ObservableObject {
                     if let error = error{
                         return completion(.failure(error))
                     }
-                    DispatchQueue.main.async{
-                        self.currentUser = appUSer
-                    }
+                    completion(.success(appUSer))
                 }
             }catch{
                 completion(.failure(error))
             }
         }
     }
-    
     func login (email : String, password: String , completion: @escaping (Result <AppUser, Error>) -> Void){
         Auth.auth().signIn(withEmail: email, password: password){ result, error in
             if let error = error{

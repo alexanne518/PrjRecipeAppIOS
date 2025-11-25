@@ -12,23 +12,21 @@ struct ContentView: View {
     @State private var isLoaded = false
     
     var body: some View {
-        NavigationView {
-            Group {
-                if !isLoaded {
-                    ProgressView().task { await fetchUser() }
-                } else if auth.currentUser == nil {
-                    NavigationView {
-                        LoginView()
-                    }
-                    .transition(.opacity.combined(with: .scale))
-                } else {
-                    NavView()
-                        .transition(.opacity.combined(with: .scale))
+        Group {
+            if !isLoaded {
+                ProgressView().task { await fetchUser() }
+            } else if auth.currentUser == nil {
+                NavigationView {
+                    LoginView()
                 }
+                .transition(.opacity.combined(with: .scale))
+            } else {
+                NavView()
+                    .transition(.opacity.combined(with: .scale))
             }
-            .animation(.easeInOut(duration: 0.2), value: isLoaded)
-            .animation(.easeInOut(duration: 0.2), value: auth.currentUser == nil)
         }
+        .animation(.easeInOut(duration: 0.2), value: isLoaded)
+        .animation(.easeInOut(duration: 0.2), value: auth.currentUser == nil)
     }
     
     @MainActor
