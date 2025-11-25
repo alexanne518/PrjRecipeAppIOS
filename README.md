@@ -1,13 +1,13 @@
 # Recify
 
-## A cook book app built using swift.ui, for users to post and view recipes to find and give others insperation when making food. 
+## A cookbook app built using SwiftUI, for users to post and view recipes to find and give others inspiration when making food.
 
-This project was built for an ios group term project to show our skills and knowledge using xcode and swift. In this app the user can:
+This project was built for an iOS group term project to show our skills and knowledge using Xcode and Swift. In this app the user can:
 
 * Create an account.
 * Browse and search for recipes that are already posted.
-* Create and post their own recipes
-* View thier published and favorited recipes on the profile page
+* Create and post their own recipes.
+* View their published and favorited recipes on the profile page.
 
 ## Take a look
 <img width="147" height="320" alt="Simulator Screenshot - iPhone 17 Pro - 2025-11-24 at 11 13 08" src="https://github.com/user-attachments/assets/c2a61956-ad3e-4c05-a3d0-aa2069e1ee1a" />
@@ -18,4 +18,4 @@ This project was built for an ios group term project to show our skills and know
 
 
 ## Known issues 
-Will update so that users can uplaod images for their recipes and their profile.
+Will update so that users can upload images for their recipes and their profile.
