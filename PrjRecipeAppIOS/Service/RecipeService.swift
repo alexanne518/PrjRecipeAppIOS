@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseFirestore
+import Combine
 
 class RecipeService: ObservableObject {
     static let shared = RecipeService()

@@ -1,4 +1,4 @@
-//
+
 //  Validators.swift
 //  PrjRecipeAppIOS
 //
@@ -17,6 +17,14 @@ enum Validators {
     static func isValidPassword(_ password: String) -> Bool {
         return password.count >= 6
     }
+    
+    static func checkConfirmPwd(_ password: String, _ passwordConfirm: String) -> Bool {
+        if(password == passwordConfirm){
+            return true
+        }
+        return false
+    }
+    
 }
 
 
