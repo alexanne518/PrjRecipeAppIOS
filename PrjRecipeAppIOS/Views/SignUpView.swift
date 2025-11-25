@@ -78,7 +78,7 @@ struct SignUpView: View {
                 }
                 .padding(.horizontal, 25)
                 
-                // Button with Loading Logic
+                // button with Loading Logic
                 Button(action: {
                     guard Validators.checkEmail(email) else{
                         self.errorMessage = "Invalid Email Format"
